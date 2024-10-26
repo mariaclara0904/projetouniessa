@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Divertido para Crianças!</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 20px;
+            background-color: #fff176; /* Amarelo claro */
+            color: #3e2723; /* Marrom escuro */
+            text-align: center;
+        }
+        h1 {
+            color: #e64a19; /* Laranja vibrante */
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+            border: 2px solid #039be5; /* Azul vibrante */
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #b3e5fc; /* Azul claro */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px 0;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+        label {
+            background-color: #ff9800; /* Laranja */
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 1.2em;
+        }
+        label:hover {
+            background-color: #fb8c00; /* Laranja mais escuro */
+            transform: scale(1.05);
+        }
+        input[type="radio"]:checked + label {
+            background-color: #f44336; /* Vermelho vibrante */
+        }
+        #submit {
+            margin: 20px auto;
+            padding: 15px 30px;
+            background-color: #4caf50; /* Verde */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: background-color 0.3s;
+        }
+        #submit:hover {
+            background-color: #388e3c; /* Verde mais escuro */
+        }
+        #result {
+            font-size: 1.5em;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #039be5; /* Azul vibrante */
+            border-radius: 10px;
+            background-color: #b3e5fc; /* Azul claro */
+            display: none;
+        }
+        .feedback {
+            display: none;
+            font-size: 1.2em;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .correct {
+            background-color: #c8e6c9; /* Verde claro */
+        }
+        .incorrect {
+            background-color: #ffcdd2; /* Vermelho claro */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Quiz Divertido!</h1>
+    <div id="quiz"></div>
+    <button id="submit">Enviar Respostas</button>
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+            {
+                question: "1. O que é programação?",
+                options: ["Escrever histórias", "Dar instruções para o computador", "Fazer desenhos no computador", "Digitar textos rapidamente"],
+                answer: 1
+            },
+            {
+                question: "2. Como chamamos o comando que faz o computador repetir uma ação?",
+                options: ["Repetição", "Pular", "Loop", "Voltar"],
+                answer: 2
+            },
+            {
+                question: "3. Qual comando usamos para dizer que o computador só deve fazer algo (se) uma condição for verdadeira?",
+                options: ["Sim/não", "Condição", "Talvez", "If"],
+                answer: 3
+            },
+            {
+                question: "4. O que é uma variável na programação?",
+                options: ["Uma caixinha para guardar informações", "Um comando que repete ações", "Uma função matemática", "Um tipo de erro no programa"],
+                answer: 0
+            },
+            {
+                question: "5. Qual é o nome dado às ações que fazemos no teclado ou no mouse para controlar o computador?",
+                options: ["Saída", "Programa", "Entrada", "Processador"],
+                answer: 2
+            },
+            {
+                question: "6. Como chamamos os erros em um programa de computador?",
+                options: ["Bugs", "Problemas", "Variáveis", "Comandos"],
+                answer: 0
+            },
+            {
+                question: "7. O que é um algoritmo?",
+                options: ["Um tipo de música", "Uma sequência de instruções", "Um personagem de jogo", "Um comando para repetir ações"],
+                answer: 1
+            },
+            {
+                question: "8. Como chamamos um bloco de código que faz algo específico em um programa?",
+                options: ["Variável", "Condição", "Loop", "Função"],
+                answer: 3
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz');
+        const submitButton = document.getElementById('submit');
+        const resultContainer = document.getElementById('result');
+
+        function loadQuiz() {
+            questions.forEach((q, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                questionElement.innerHTML = `
+                    <p>${q.question}</p>
+                    <ul class="options">
+                        ${q.options.map((option, i) => `
+                            <li>
+                                <input type="radio" id="q${index}o${i}" name="question${index}" value="${i}">
+                                <label for="q${index}o${i}">${option}</label>
+                                <div class="feedback" id="feedback${index}${i}"></div>
+                            </li>`).join('')}
+                    </ul>
+                `;
+                quizContainer.appendChild(questionElement);
+            });
+        }
+
+        function showResult() {
+            const answers = questions.map((_, index) => {
+                const selected = document.querySelector(input[name="question${index}"]:checked);
+                return selected ? parseInt(selected.value) : -1;
+            });
+
+            let score = 0;
+            answers.forEach((answer, index) => {
+                questions[index].options.forEach((_, optionIndex) => {
+                    const feedbackElement = document.getElementById(feedback${index}${optionIndex});
+                    if (optionIndex === questions[index].answer) {
+                        if (answer === optionIndex) {
+                            feedbackElement.innerHTML = "🎉 Correto!";
+                            feedbackElement.className = "feedback correct";
+                            score++;
+                        } else {
+                            feedbackElement.innerHTML = "❌ Errado!";
+                            feedbackElement.className = "feedback incorrect";
+                        }
+                    }
+                    feedbackElement.style.display = 'block';
+                });
+            });
+
+            resultContainer.innerHTML = Você acertou <strong>${score}</strong> de <strong>${questions.length}</strong> perguntas!;
+            resultContainer.style.display = 'block';
+        }
+
+        submitButton.addEventListener('click', showResult);
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
